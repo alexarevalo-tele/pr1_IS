@@ -6,6 +6,14 @@
 </head>
 <body>
 <p>Mensaje de bienvenida, estoy probando: <span th:text="${mensaje}"></span></p>
+<p>Por favor, introduzca a continuación sus datos:</p>
+<form action="datosusuario" method="post">
+    Email:<br> 
+    <input type="email" name="email" required><br>
+    Nombre:<br> 
+    <input type="text" name="nombre" required><br><br>
+    <input type="submit" value="Enviar">
+</form>
 </body>
 </html>
 
