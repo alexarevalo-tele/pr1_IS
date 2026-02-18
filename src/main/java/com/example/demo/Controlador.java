@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
+
 
 @Controller
 public class Controlador {
@@ -21,17 +25,46 @@ public class Controlador {
         return "vista";
     }
 
-    @PostMapping("/datosusuario")
-    public String metodo(Usuario usuario, HttpSession session) {
-    // Spring llena automáticamente el objeto 'usuario' con los datos del formulario
+    @PostMapping(value = "/datosusuario")
+    public String metodo(HttpServletRequest req, HttpServletResponse response){
+    String email = req.getParameter("email");
+    String nombre = req.getParameter("nombre");
+    String apellidos = req.getParameter("apellidos");
     
-    // Guardamos el objeto completo en la sesión HTTP
-    session.setAttribute("usuarioSesion", usuario);
-    
-    // Imprimimos en consola para verificar (como hacías antes)
-    System.out.println("Guardado en sesión: " + usuario.getNombre());
-    
+    Usuario usuario = new Usuario();
+    usuario.setEmail(email);
+    usuario.setNombre(nombre);
+    usuario.setApellidos(apellidos);
+
+    //Obtenemos la sesión desde el request (true para que la cree si no existe)
+    HttpSession sesion = req.getSession(true);
+
+    //Guardamos el objeto usuario en la sesión con el atributo "usuario"
+    sesion.setAttribute("usuarioSesion", usuario);
+
+    Cookie cookieNombre = new Cookie("user_cookie", nombre);
+    cookieNombre.setMaxAge(60 * 60 * 24 * 365); // Segundos en un año
+    cookieNombre.setPath("/"); // Disponible en toda la web
+    response.addCookie(cookieNombre);
+        
+    System.out.println("Datos de la sesion: " +email + ", " + nombre + ", " + apellidos);
+
     return "vistausuario";
     }
+
+
+    @GetMapping("/datosusuario")
+    public String leerCookie(HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+        for (Cookie c : cookies) {
+            if ("user_cookie".equals(c.getName())) {
+                System.out.println("Cookie encontrada en el servidor: " + c.getValue());
+            }
+        }
+    }
+    return "vistausuario";
+    }
+    
     
 }

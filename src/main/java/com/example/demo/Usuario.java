@@ -5,6 +5,12 @@ public class Usuario {
     private String nombre;
     private String apellidos;
 
+    public Usuario() {
+        email = "";
+        nombre = "";
+        apellidos = "";
+    }
+
     public Usuario(String email, String nombre, String apellidos) {
         this.email = email;
         this.nombre = nombre;
