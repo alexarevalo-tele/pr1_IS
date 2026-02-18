@@ -6,6 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class Controlador {
@@ -15,14 +21,17 @@ public class Controlador {
         return "vista";
     }
 
-    @PostMapping(value = "/datosusuario")
-    public String metodo(HttpServletRequest req) {
-    String email = req.getParameter("email");
-    String nombre = req.getParameter("nombre");
+    @PostMapping("/datosusuario")
+    public String metodo(Usuario usuario, HttpSession session) {
+    // Spring llena automáticamente el objeto 'usuario' con los datos del formulario
     
-    System.out.println(email + ", " + nombre);
+    // Guardamos el objeto completo en la sesión HTTP
+    session.setAttribute("usuarioSesion", usuario);
     
-    return "vista";
+    // Imprimimos en consola para verificar (como hacías antes)
+    System.out.println("Guardado en sesión: " + usuario.getNombre());
+    
+    return "vistausuario";
     }
     
 }
